@@ -1,0 +1,98 @@
+<!--
+This is a really simple macro that polls tables to generate individual coin loot from multiple creatures at once. 
+
+Create a new macro in MapTools v1.7 or later and copy/paste this code along with the tables created using the following format - 
+
+example for cr17.solo.treasure:
+
+01–15	ep=[r:roll(2000,6)]; gp=[r:roll(800,6)]; 
+16–55	gp=[r:roll(1000,6)]; pp=[r:roll(100,6)];
+56–100	gp=[r:roll(1000,6)]; pp=[r:roll(200,6)];
+
+-->
+
+<!-- var -->
+[h:treasureList = ""]
+[h:copper = 0]
+[h:silver = 0]
+[h:electrum = 0]
+[h:gold = 0]
+[h:platinum = 0]
+
+<!-- Launch Window -->
+[h:RollTreasure = input(
+	"cr|1|CR Level",
+	"monsters|1|No. of Individuals"
+	)]
+[h:abort(RollTreasure)]
+
+<!-- set table -->
+[h,if(cr <= 4):treasureTable = "cr1.solo.treasure"]
+[h,if(cr >= 5 && cr <= 10):treasureTable = "cr5.solo.treasure"]
+[h,if(cr >= 11 && cr <= 16):treasureTable = "cr11.solo.treasure"]
+[h,if(cr >= 17):treasureTable = "cr17.solo.treasure"] 
+
+<!-- collect results -->
+[h,count(monsters), CODE: {
+	[h: cp = 0] [h: sp = 0] [h: ep = 0] [h: gp = 0] [h: pp = 0]
+	[h: coins = evalmacro(table(treasureTable,1d100)) ]
+	[h: varsFromStrProp(coins) ]
+	[h: copper = add(copper,cp)]
+	[h: silver = add(silver,sp)]
+	[h: electrum = add(electrum,ep)]
+	[h: gold = add(gold,gp)]
+	[h: platinum = add(platinum,pp)]	
+	}
+]
+
+[h: treasureoutput = ""]
+[h: coincount = add(copper, silver, electrum, gold, platinum)]
+[h: remainingcoins = coincount]
+[h: totalcoins = 0]
+
+[h, if(copper>0), CODE:{
+	[h: treasureoutput = add(treasureoutput,copper," cp")]
+	[h: totalcoins = totalcoins + copper]
+	}]
+
+[h, if(silver>0), CODE:{
+	[h, if(totalcoins>0), CODE: {
+		[h: treasureoutput = add(treasureoutput,", ")]
+		[h, if(coincount == totalcoins + silver): treasureoutput = add(treasureoutput," and ")]
+		}]
+	[h: treasureoutput = add(treasureoutput,silver," sp")]
+	[h: totalcoins = totalcoins + silver]
+	}]
+
+[h, if(electrum>0), CODE:{
+	[h, if(totalcoins>0), CODE: {
+		[h: treasureoutput = add(treasureoutput,", ")]
+		[h, if(coincount == totalcoins + electrum): treasureoutput = add(treasureoutput," and ")]
+		}]
+	[h: treasureoutput = add(treasureoutput,electrum," ep")]
+	[h: totalcoins = totalcoins + electrum]
+	}]
+
+[h, if(gold>0), CODE:{
+	[h, if(totalcoins>0), CODE: {
+		[h: treasureoutput = add(treasureoutput,", ")]
+		[h, if(coincount == totalcoins + gold): treasureoutput = add(treasureoutput," and ")]
+		}]
+	[h: treasureoutput = add(treasureoutput,gold," gp")]
+	[h: totalcoins = totalcoins + gold]
+	}]
+
+[h, if(platinum>0), CODE: {
+	[h, if(totalcoins>0), CODE: {
+		[h: treasureoutput = add(treasureoutput,", ")]
+		[h, if(coincount == totalcoins + platinum): treasureoutput = add(treasureoutput," and ")]
+		}]
+	[h: treasureoutput = add(treasureoutput,platinum," pp")]
+	[h: totalcoins = totalcoins + platinum]
+	}]
+	
+[h: coinlbs = round(divide(coincount,50),1) ]
+
+[h:output = strformat("%{monsters} CR%{cr} creatures had <br>%{treasureoutput}.<br>(%{coincount} coins, %{coinlbs} lbs.)")] 
+
+[r: output]<br>
