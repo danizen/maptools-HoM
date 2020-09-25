@@ -3,6 +3,11 @@ This is a really simple macro that polls tables to generate individual coin loot
 
 Create a new macro in MapTools v1.7 or later and copy/paste this code along with the tables created using the following format - 
 
+The tables have to be created by entering them into maptools manually - or by using a the javascript page here:
+http://abits.biz/maptool/MapToolTable.htm
+
+I may create a similar tool in the future - but for now the above javascript works great for creating maptool table files. 
+
 example for cr17.solo.treasure:
 
 01–15	ep=[r:roll(2000,6)]; gp=[r:roll(800,6)]; 
