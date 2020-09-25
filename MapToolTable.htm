@@ -1,0 +1,103 @@
+<html>
+<head>
+<script src="jszip.min.js"></script>
+<script>	
+	function convert(){
+		var table = document.getElementById("table").value.trim().replace(/\u2013|\u2014/g, "-").replace(/&/g, " and ").split("\n");
+		console.log(table);
+		var output = "<net.rptools.maptool.model.LookupTable><entryList>";
+		var last = 0;
+		for(i=0;i<table.length;i++){
+			var tmp = table[i].trim().split('\t',2);
+			var min=max=0;
+			if(tmp[0].indexOf('-')>0){//is a range not a single value
+				var itmp = tmp[0].split('-');//split up range
+				min = itmp[0];
+				max=itmp[1];
+			}
+			else min=max=tmp[0];
+			console.log(min,max,tmp);
+			output+="<net.rptools.maptool.model.LookupTable_-LookupEntry>\n<min>"+min+"</min>\n<max>"+max+"</max>\n"+
+					"<value>"+tmp[1]+"</value></net.rptools.maptool.model.LookupTable_-LookupEntry>";
+			if( parseInt(max) > last) last=parseInt(max);
+			console.log(i,max,last);
+		}
+		console.log(last);
+		output+='  </entryList>\n'+
+				'<name>'+document.getElementById("tableName").value.trim()+'</name>\n'+
+				'<defaultRoll>1d'+last+'</defaultRoll>\n'+
+				'<visible>true</visible>\n'+
+				'<allowLookup>true</allowLookup>\n'+
+				'<pickOnce>false</pickOnce>\n'+
+				'</net.rptools.maptool.model.LookupTable>\n';
+				
+		//console.log(table);
+		//document.getElementById("output").innerHTML = output;
+		//document.getElementById("propoutput").innerHTML = 
+		var properties=
+													'<map>\n'+
+													'<entry>\n'+
+													'	<string>version</string>\n'+
+													'	<string>1.6.1</string>\n'+
+													'</entry>\n'+
+													'</map>\n';
+				var zip = new JSZip();
+				zip.file("properties.xml",properties);
+				zip.file("content.xml",output);
+				zip.generateAsync({type:"blob"})
+					.then(function(content) {
+						// see FileSaver.js
+						saveAs(content, document.getElementById("tableName").value.trim()+".mttable");
+					});
+	}
+	function saveAs(blob, filename) {
+		if (typeof navigator.msSaveOrOpenBlob !== 'undefined') {
+			return navigator.msSaveOrOpenBlob(blob, fileName);
+		} else if (typeof navigator.msSaveBlob !== 'undefined') {
+			return navigator.msSaveBlob(blob, fileName);
+		} else {
+			var elem = window.document.createElement('a');
+			elem.href = window.URL.createObjectURL(blob);
+			elem.download = filename;
+			elem.style = 'display:none;opacity:0;color:transparent;';
+			(document.body || document.documentElement).appendChild(elem);
+			if (typeof elem.click === 'function') {
+			elem.click();
+			} else {
+			elem.target = '_blank';
+			elem.dispatchEvent(new MouseEvent('click', {
+				view: window,
+				bubbles: true,
+				cancelable: true
+			}));
+			}
+			URL.revokeObjectURL(elem.href);
+		}
+	}
+</script>
+</head>
+<body>
+<h2>RPTools <a href="https://www.rptools.net/toolbox/maptool/">Maptool</a> table import Tool</h2>
+Supported version 1.6.1<br>
+1. Name your table<br>
+2. Paste in a tab delimited table. You can paste 2 columns directly from Excel.<br>(You must not have tabs in the description/value field, please make sure your dashes are normal and not long)<br>
+<!-- 2. Copy and paste the two boxes into separate text files. Name them as below.<br>
+3. Put both files in a .zip archive.<br>
+4. Change the .zip extension to  from .zip to .mttable<br>
+-->
+<button onclick='convert();' >Download</button>Name:<input type=text id=tableName size=30 value="name"></input><br>
+<textarea id=table rows=50 cols=120 onclick="this.select();" >1	First line
+2-5	second line
+6	next line
+7	another line
+</textarea>
+<br>
+<!--
+properties.xml
+<textarea id=propoutput rows=5 cols=120>properties.xml output here</textarea>
+content.xml
+<textarea id=output rows=10 cols=120>content.xml output here</textarea>
+-->
+
+</body>
+</html>
