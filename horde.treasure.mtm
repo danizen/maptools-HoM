@@ -1,0 +1,151 @@
+<!--
+THIS IS NOT FINISHED
+//
+
+This is a really simple macro that polls tables to generate treasure hordes for D&D 5E
+
+Create a new macro in MapTools v1.7 or later and copy/paste this code along with the tables created using the following format - 
+
+The tables have to be created by entering them into maptools manually - or by using a the javascript page here:
+http://abits.biz/maptool/MapToolTable.htm
+
+I may create a similar tool in the future - but for now the above javascript works great for creating maptool table files. 
+
+example for cr17.solo.treasure:
+
+01–15	ep=[r:roll(2000,6)]; gp=[r:roll(800,6)]; 
+16–55	gp=[r:roll(1000,6)]; pp=[r:roll(100,6)];
+56–100	gp=[r:roll(1000,6)]; pp=[r:roll(200,6)];
+
+-->
+
+<!-- set logging level to String containing a log level: DEBUG,INFO,WARN,ERROR,FATAL-->
+[r: log.setLevel("net.rptools.maptool.client.MapToolLineParser","WARN")]
+
+<!-- var -->
+[h: treasureList = ""]
+[h: treasureTable = ""]
+[h: totalcoins = 0]
+[h: treasureoutput = ""]
+[h: copper = 0]
+[h: silver = 0]
+[h: electrum = 0]
+[h: gold = 0]
+[h: platinum = 0]
+[h: gemlist = ""]
+[h: artlist = ""]
+
+<!-- Launch Window -->
+[h:RollTreasure = input(
+	"cr|1|CR Level"
+	)]
+[h:abort(RollTreasure)]
+
+<!-- get coins -->
+[h,if(cr <= 4), CODE:{
+	[h: gemsNartTable = "cr1.art.objects"]
+	[h: gemsNart = evalmacro(table(gemsNartTable,1d100))]
+	[h: varsFromStrProp(gemsNart)]
+	[h: copper = 600d6]
+	[h: silver = 300d6]
+	[h: electrum = 0]
+	[h: gold = 20d6]
+	[h: platinum = 0]
+	}]
+
+[h,if(cr >= 5 && cr <= 10), CODE:{
+	[h: copper = 200d6]
+	[h: silver = 2000d6]
+	[h: electrum = 0]
+	[h: gold = 600d6]
+	[h: platinum = 30d6]
+	}]
+
+[h,if(cr >= 11 && cr <= 16), CODE:{
+	[h: copper = 0]
+	[h: silver = 0]
+	[h: electrum = 0]
+	[h: gold = 4000d6]
+	[h: platinum = 500d6]
+	}]
+
+
+[h,if(cr >= 17), CODE:{ 
+	[h: copper = 0]
+	[h: silver = 0]
+	[h: electrum = 0]
+	[h: gold = 12000d6]
+	[h: platinum = 8000d6]
+	}]
+
+[h: coincount = add(copper, silver, electrum, gold, platinum)]
+
+
+[h, if(copper>0), CODE:{
+	[h: treasureoutput = add(treasureoutput,copper," cp")]
+	[h: totalcoins = totalcoins + copper]
+	}]
+
+[h, if(silver>0), CODE:{
+	[h, if(totalcoins>0), CODE: {
+		[h: treasureoutput = add(treasureoutput,", ")]
+		[h, if(coincount == add(totalcoins,silver) ): treasureoutput = add(treasureoutput," and ")]
+		}]
+	[h: treasureoutput = add(treasureoutput,silver," sp")]
+	[h: totalcoins = totalcoins + silver]
+	}]
+
+[h, if(electrum>0), CODE:{
+	[h, if(totalcoins>0), CODE: {
+		[h: treasureoutput = add(treasureoutput,", ")]
+		[h, if(coincount == add(totalcoins,electrum) ): treasureoutput = add(treasureoutput," and ")]
+		}]
+	[h: treasureoutput = add(treasureoutput,electrum," ep")]
+	[h: totalcoins = totalcoins + electrum]
+	}]
+
+[h, if(gold>0), CODE:{
+	[h, if(totalcoins>0), CODE: {
+		[h: treasureoutput = add(treasureoutput,", ")]
+		[h, if(coincount == totalcoins + gold): treasureoutput = add(treasureoutput," and ")]
+		}]
+	[h: treasureoutput = add(treasureoutput,gold," gp")]
+	[h: totalcoins = totalcoins + gold]
+	}]
+
+[h, if(platinum>0), CODE: {
+	[h, if(totalcoins>0), CODE: {
+		[h: treasureoutput = add(treasureoutput,", ")]
+		[h, if(coincount == add(totalcoins,platinum) ): treasureoutput = add(treasureoutput," and ")]
+		}]
+	[h: treasureoutput = add(treasureoutput,platinum," pp")]
+	[h: totalcoins = totalcoins + platinum]
+	}]
+
+<!-- get gems -->
+[count(gems,""), CODE:{
+	[h: gem = evalmacro(table("10gp.gems",1d12))]
+	[if(json.contains(gemlist,gem)),CODE: {
+		[h: gemlist = json.set(gemlist,gem,add(json.get(gemlist,gem),1))]};{
+		[h: gemlist = json.set(gemlist,gem,1)]
+		}]
+}]
+
+<!-- get art -->
+[count(art,""), CODE:{
+	[h: art = evalmacro(table("25gp.art.objects",1d10))]
+	[if(json.contains(artlist,art)),CODE: {
+		[h: artlist = json.set(artlist,art,add(json.get(artlist,art),1))]};{
+		[h: artlist = json.set(artlist,art,1)]
+		}]
+}]
+
+<br>
+[r:"GEMS? " + gemlist] <br> 
+[r:"ART? " + artlist] <br>  
+
+[h: coinlbs = round(divide(coincount,50),1) ]
+
+[h:output = strformat("CR%{cr} treasure horde had <br>%{treasureoutput}.<br>(%{coincount} coins, %{coinlbs} lbs.)")] 
+
+[r: output]<br>

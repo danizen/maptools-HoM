@@ -1,0 +1,17 @@
+01–06	gems=0;gvalue=0;art=0;avalue=0;
+07–16	gems=[r:roll(2,6)];gvalue=10;art=0;avalue=0;
+17–26	gems=0;gvalue=0;art=[r:roll(2,4)];avalue=25;
+27–36	gems=[r:roll(2,6)];gvalue=50;art=0;avalue=0;
+37–44	gems=[r:roll(2,6)];gvalue=10;art=0;avalue=0;
+45–52	gems=0;gvalue=0;art=[r:roll(2,4)];avalue=25;
+53–60	gems=[r:roll(2,6)];gvalue=50;art=0;avalue=0;
+61–65	gems=[r:roll(2,6)];gvalue=10;art=0;avalue=0;
+66–70	gems=0;gvalue=0;art=[r:roll(2,4)];avalue=25;
+71–75	gems=[r:roll(2,6)];gvalue=50;art=0;avalue=0;
+76–78	gems=[r:roll(2,6)];gvalue=10;art=0;avalue=0;
+79–80	gems=0;gvalue=0;art=[r:roll(2,4)];avalue=25;
+81–85	gems=[r:roll(2,6)];gvalue=50;art=0;avalue=0;
+86–92	gems=0;gvalue=0;art=[r:roll(2,4)];avalue=25;
+93–97	gems=[r:roll(2,6)];gvalue=50;art=0;avalue=0;
+98–99	gems=0;gvalue=0;art=[r:roll(2,4)];avalue=25;
+100	gems=[r:roll(2,6)];gvalue=50;art=0;avalue=0;
