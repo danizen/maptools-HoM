@@ -1,6 +1,4 @@
-<!--
-THIS IS NOT FINISHED
-//
+<!-- THIS IS NOT FINISHED 
 
 This is a really simple macro that polls tables to generate treasure hordes for D&D 5E
 
@@ -13,16 +11,17 @@ I may create a similar tool in the future - but for now the above javascript wor
 
 example for cr17.solo.treasure:
 
-01–15	ep=[r:roll(2000,6)]; gp=[r:roll(800,6)]; 
-16–55	gp=[r:roll(1000,6)]; pp=[r:roll(100,6)];
-56–100	gp=[r:roll(1000,6)]; pp=[r:roll(200,6)];
+ep=[r:roll(2000,6)]; gp=[r:roll(800,6)]; 
+gp=[r:roll(1000,6)]; pp=[r:roll(100,6)];
+gp=[r:roll(1000,6)]; pp=[r:roll(200,6)];
 
 -->
 
 <!-- set logging level to String containing a log level: DEBUG,INFO,WARN,ERROR,FATAL-->
-[r: log.setLevel("net.rptools.maptool.client.MapToolLineParser","WARN")]
 
-<!-- var -->
+<!-- [r: log.setLevel("net.rptools.maptool.client.MapToolLineParser","WARN")] --> 
+
+<!-- Variables -->
 [h: treasureList = ""]
 [h: treasureTable = ""]
 [h: totalcoins = 0]
@@ -34,18 +33,375 @@ example for cr17.solo.treasure:
 [h: platinum = 0]
 [h: gemlist = ""]
 [h: artlist = ""]
+[h: treasure.objects = ""]
+
+<!-- horde treasure tables -->
+[h: treasure.objects.cr0 = "treasure.horde.cr0.objects"]
+[h: treasure.objects.cr5 = "treasure.horde.cr5.objects"] 
+[h: treasure.objects.cr11 = "treasure.horde.cr11.objects"] 
+[h: treasure.objects.cr17 = "treasure.horde.cr17.objects"] 
+
+<!-- Gem Tables -->
+[h: table.gems10gp = "gems.10gp"]
+[h: table.gems50gp = "gems.50gp"]
+[h: table.gems100gp = "gems.100gp"]
+[h: table.gems500gp = "gems.500gp"]
+[h: table.gems1000gp = "gems.1000gp"]
+[h: table.gems5000gp = "gems.5000gp"]
+
+<!-- Art Tables -->
+[h: table.art25gp = "art.25gp"]
+[h: table.art250gp = "art.250gp"]
+[h: table.art750gp = "art.750gp"]
+[h: table.art2500gp = "art.2500gp"]
+[h: table.art7500gp = "art.7500gp"]
+
+[h: table.gemsorart = json.set("{}",
+	"cr0",treasure.objects.cr0,
+	"cr5",treasure.objects.cr5,
+	"cr11",treasure.objects.cr11,
+	"cr17",treasure.objects.cr17
+	)]
+
+[h: table.gems = json.set("{}",
+	"gp10",table.gems10gp,
+	"gp50",table.gems50gp,
+	"gp100",table.gems100gp,
+	"gp500",table.gems500gp,
+	"gp1000",table.gems1000gp,
+	"gp5000",table.gems5000gp
+	)]
+
+[h: table.gems = json.set("{}",
+	"gp10",table.gems10gp,
+	"gp50",table.gems50gp,
+	"gp100",table.gems100gp,
+	"gp500",table.gems500gp,
+	"gp1000",table.gems1000gp,
+	"gp5000",table.gems5000gp
+	)]
+
+<!-- check and set up tables from the DMG-->
+<!-- https://www.dndbeyond.com/sources/dmg/treasure#RandomTreasure -->
+[h: campaign.tableList = getTableNames("json")]
+
+[if(json.contains(campaign.tableList,treasure.objects.cr0)), CODE: { }; {
+	[h:createTable(treasure.objects.cr0,0,0)]
+	[h:addTableEntry(treasure.objects.cr0,01,6,"gems=0; gvalue=0; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr0,07,16,"gems=[r:roll(2,6)]; gvalue=10; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr0,17,26,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=25; ")]
+	[h:addTableEntry(treasure.objects.cr0,27,36,"gems=[r:roll(2,6)]; gvalue=50; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr0,37,44,"gems=[r:roll(2,6)]; gvalue=10; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr0,45,52,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=25; ")]
+	[h:addTableEntry(treasure.objects.cr0,53,60,"gems=[r:roll(2,6)]; gvalue=50; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr0,61,65,"gems=[r:roll(2,6)]; gvalue=10; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr0,66,70,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=25; ")]
+	[h:addTableEntry(treasure.objects.cr0,71,75,"gems=[r:roll(2,6)]; gvalue=50; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr0,76,78,"gems=[r:roll(2,6)]; gvalue=10; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr0,79,80,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=25; ")]
+	[h:addTableEntry(treasure.objects.cr0,81,85,"gems=[r:roll(2,6)]; gvalue=50; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr0,86,92,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=25; ")]
+	[h:addTableEntry(treasure.objects.cr0,93,97,"gems=[r:roll(2,6)]; gvalue=50; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr0,98,99,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=25; ")]
+	[h:addTableEntry(treasure.objects.cr0,100,100,"gems=[r:roll(2,6)]; gvalue=50; art=0; avalue=0; ")]
+	}]
+	
+[if(json.contains(campaign.tableList,treasure.objects.cr5 )), CODE: { }; {
+	[h:createTable(treasure.objects.cr5,0,0)]
+	[h:addTableEntry(treasure.objects.cr5, 01, 04, "gems=0; gvalue=0; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 05, 10, "gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=25; ")]
+	[h:addTableEntry(treasure.objects.cr5, 11, 16, "gems=[r:roll(3,6)]; gvalue=50; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 17, 22, "gems=[r:roll(3,6)]; gvalue=100; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 23, 28, "gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr5, 29, 32, "gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=25; ")]
+	[h:addTableEntry(treasure.objects.cr5, 33, 36, "gems=[r:roll(3,6)]; gvalue=50; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 37, 40, "gems=[r:roll(3,6)]; gvalue=100; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 41, 44, "gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr5, 45, 49, "gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=25; ")]
+	[h:addTableEntry(treasure.objects.cr5, 50, 54, "gems=[r:roll(3,6)]; gvalue=50; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 55, 59, "gems=[r:roll(3,6)]; gvalue=100; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 60, 63, "gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr5, 64, 66, "gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=25; ")]
+	[h:addTableEntry(treasure.objects.cr5, 67, 69, "gems=[r:roll(3,6)]; gvalue=50; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 70, 72, "gems=[r:roll(3,6)]; gvalue=100; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 73, 74, "gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr5, 75, 76, "gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=25; ")]
+	[h:addTableEntry(treasure.objects.cr5, 77, 78, "gems=[r:roll(3,6)]; gvalue=50; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 79, 79, "gems=[r:roll(3,6)]; gvalue=100; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 80, 80, "gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr5, 81, 84, "gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=25; ")]
+	[h:addTableEntry(treasure.objects.cr5, 85, 88, "gems=[r:roll(3,6)]; gvalue=50; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 89, 91, "gems=[r:roll(3,6)]; gvalue=100; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 92, 94, "gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr5, 95, 96, "gems=[r:roll(3,6)]; gvalue=100; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5, 97, 98, "gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr5, 99, 99, "gems=[r:roll(3,6)]; gvalue=100; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr5,100, 100,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	}]
+	
+[if(json.contains(campaign.tableList,treasure.objects.cr11 )), CODE: { }; {
+	[h:createTable(treasure.objects.cr11,0,0)]
+	[h:addTableEntry(treasure.objects.cr11, 01, 03,"gems=0; gvalue=0; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 04, 06,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 07, 09,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 10, 12,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 13, 15,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 16, 19,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 20, 23,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 24, 26,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 27, 29,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 30, 35,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 36, 40,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 41, 45,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 46, 50,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 51, 54,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 55, 58,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 59, 62,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 63, 66,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 67, 68,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 69, 70,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 71, 72,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 73, 74,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 75, 76,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 77, 78,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 79, 80,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 81, 82,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 83, 85,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 86, 88,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 89, 90,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 91, 92,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 93, 94,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 95, 96,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 97, 98,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 99,100,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	}]
+	
+[if(json.contains(campaign.tableList,treasure.objects.cr11 )), CODE: { }; {
+	[h:createTable(treasure.objects.cr11,0,0)]
+	[h:addTableEntry(treasure.objects.cr11, 01, 03,"gems=0; gvalue=0; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 04, 06,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 07, 09,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 10, 12,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 13, 15,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 16, 19,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 20, 23,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 24, 26,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 27, 29,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 30, 35,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 36, 40,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 41, 45,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 46, 50,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 51, 54,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 55, 58,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 59, 62,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 63, 66,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 67, 68,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 69, 70,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 71, 72,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 73, 74,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 75, 76,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 77, 78,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 79, 80,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 81, 82,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 83, 85,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 86, 88,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 89, 90,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 91, 92,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 93, 94,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=250; ")]
+	[h:addTableEntry(treasure.objects.cr11, 95, 96,"gems=0; gvalue=0; art=[r:roll(2,4)]; avalue=750; ")]
+	[h:addTableEntry(treasure.objects.cr11, 97, 98,"gems=[r:roll(3,6)]; gvalue=500; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr11, 99,100,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	}]
+
+[if(json.contains(campaign.tableList,treasure.objects.cr17 )), CODE: { }; {
+	[h:createTable(treasure.objects.cr17,0,0)]
+	[h:addTableEntry(treasure.objects.cr17,  1,  2,"gems=0; gvalue=0; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr17,  3,  5,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr17,  6,  8,"gems=0; gvalue=0; art=[r:roll(1,10)]; avalue=2500; ")]
+	[h:addTableEntry(treasure.objects.cr17,  9, 11,"gems=0; gvalue=0; art=[r:roll(1,4)]; avalue=7500; ")]
+	[h:addTableEntry(treasure.objects.cr17, 12, 14,"gems=[r:roll(1,8)]; gvalue=5000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr17, 15, 22,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr17, 23, 30,"gems=0; gvalue=0; art=[r:roll(1,10)]; avalue=2500; ")]
+	[h:addTableEntry(treasure.objects.cr17, 31, 38,"gems=0; gvalue=0; art=[r:roll(1,4)]; avalue=7500; ")]
+	[h:addTableEntry(treasure.objects.cr17, 39, 46,"gems=[r:roll(1,8)]; gvalue=5000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr17, 47, 52,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr17, 53, 58,"gems=0; gvalue=0; art=[r:roll(1,10)]; avalue=2500; ")]
+	[h:addTableEntry(treasure.objects.cr17, 59, 63,"gems=0; gvalue=0; art=[r:roll(1,4)]; avalue=7500; ")]
+	[h:addTableEntry(treasure.objects.cr17, 64, 68,"gems=[r:roll(1,8)]; gvalue=5000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr17, 69, 69,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr17, 70, 70,"gems=0; gvalue=0; art=[r:roll(1,10)]; avalue=2500; ")]
+	[h:addTableEntry(treasure.objects.cr17, 71, 71,"gems=0; gvalue=0; art=[r:roll(1,4)]; avalue=7500; ")]
+	[h:addTableEntry(treasure.objects.cr17, 72, 72,"gems=[r:roll(1,8)]; gvalue=5000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr17, 73, 74,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr17, 75, 76,"gems=0; gvalue=0; art=[r:roll(1,10)]; avalue=2500; ")]
+	[h:addTableEntry(treasure.objects.cr17, 77, 78,"gems=0; gvalue=0; art=[r:roll(1,4)]; avalue=7500")]
+	[h:addTableEntry(treasure.objects.cr17, 79, 80,"gems=[r:roll(1,8)]; gvalue=5000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr17, 81, 85,"gems=[r:roll(3,6)]; gvalue=1000; art=0; avalue=0; ")]
+	[h:addTableEntry(treasure.objects.cr17, 86, 90,"gems=0; gvalue=0; art=[r:roll(1,10)]; avalue=2500; ")]
+	[h:addTableEntry(treasure.objects.cr17, 91, 95,"gems=0; gvalue=0; art=[r:roll(1,4)]; avalue=7500; ")]
+	[h:addTableEntry(treasure.objects.cr17, 96,100,"gems=[r:roll(1,8)]; gvalue=5000; art=0; avalue=0; ")]
+	}]
+	
+[if(json.contains(campaign.tableList,table.gems10gp)), CODE: { }; {
+	[h:createTable(table.gems10gp,0,0)]
+	[h:addTableEntry(table.gems10gp,1,1,"Azurite")]
+	[h:addTableEntry(table.gems10gp,2,2,"Banded agate")]
+	[h:addTableEntry(table.gems10gp,3,3,"Blue quartz")]
+	[h:addTableEntry(table.gems10gp,4,4,"Eye agate")]
+	[h:addTableEntry(table.gems10gp,5,5,"Hematite")]
+	[h:addTableEntry(table.gems10gp,6,6,"Lapis lazuli")]
+	[h:addTableEntry(table.gems10gp,7,7,"Malachite")]
+	[h:addTableEntry(table.gems10gp,8,8,"Moss agate")]
+	[h:addTableEntry(table.gems10gp,9,9,"Obsidian")]
+	[h:addTableEntry(table.gems10gp,10,10,"Rhodochrosite")]
+	[h:addTableEntry(table.gems10gp,11,11,"Tiger eye")]
+	[h:addTableEntry(table.gems10gp,12,12,"Turquoise")]
+	}]
+
+
+[if(json.contains(campaign.tableList,table.gems50gp)), CODE: { }; {
+	[h:createTable(table.gems50gp, 0, 0 )]
+	[h:addTableEntry(table.gems50gp,1,1,"Bloodstone")]
+	[h:addTableEntry(table.gems50gp,2,2,"Carnelian")]
+	[h:addTableEntry(table.gems50gp,3,3,"Chalcedony")]
+	[h:addTableEntry(table.gems50gp,4,4,"Chrysoprase")]
+	[h:addTableEntry(table.gems50gp,5,5,"Citrine")]
+	[h:addTableEntry(table.gems50gp,6,6,"Jasper")]
+	[h:addTableEntry(table.gems50gp,7,7,"Moonstone")]
+	[h:addTableEntry(table.gems50gp,8,8,"Onyx")]
+	[h:addTableEntry(table.gems50gp,9,9,"Quartz")]
+	[h:addTableEntry(table.gems50gp,10,10,"Sardonyx")]
+	[h:addTableEntry(table.gems50gp,11,11,"Star rose quartz")]
+	[h:addTableEntry(table.gems50gp,12,12,"Zircon")]
+	}]
+	
+[if(json.contains(campaign.tableList,table.gems100gp)), CODE: { }; {
+	[h:createTable(table.gems100gp, 0, 0 )]
+	[h:addTableEntry(table.gems100gp,1,1,"Amber")]
+	[h:addTableEntry(table.gems100gp,2,2,"Amethyst")]
+	[h:addTableEntry(table.gems100gp,3,3,"Chrysoberyl")]
+	[h:addTableEntry(table.gems100gp,4,4,"Coral")]
+	[h:addTableEntry(table.gems100gp,5,5,"Garnet")]
+	[h:addTableEntry(table.gems100gp,6,6,"Jade")]
+	[h:addTableEntry(table.gems100gp,7,7,"Jet")]
+	[h:addTableEntry(table.gems100gp,8,8,"Pearl")]
+	[h:addTableEntry(table.gems100gp,9,9,"Spinel")]
+	[h:addTableEntry(table.gems100gp,10,10,"Tourmaline")]
+	}]
+	
+[if(json.contains(campaign.tableList,table.gems500gp)), CODE: { }; {
+	[h:createTable(table.gems500gp, 0, 0 )]
+	[h:addTableEntry(table.gems500gp,1,1,"Alexandrite")]
+	[h:addTableEntry(table.gems500gp,2,2,"Aquamarine")]
+	[h:addTableEntry(table.gems500gp,3,3,"Black pearhl")]
+	[h:addTableEntry(table.gems500gp,4,4,"Blue spinel")]
+	[h:addTableEntry(table.gems500gp,5,5,"Peridot")]
+	[h:addTableEntry(table.gems500gp,6,6,"Topaz")]
+	}]
+
+[if(json.contains(campaign.tableList,table.gems1000gp)), CODE: { }; {
+	[h:createTable(table.gems1000gp, 0, 0 )]
+	[h:addTableEntry(table.gems1000gp,1,1,"Black opal")]
+	[h:addTableEntry(table.gems1000gp,2,2,"Blue sapphire")]
+	[h:addTableEntry(table.gems1000gp,3,3,"Emerald")]
+	[h:addTableEntry(table.gems1000gp,4,4,"Fire opal")]
+	[h:addTableEntry(table.gems1000gp,5,5,"Star ruby")]
+	[h:addTableEntry(table.gems1000gp,6,6,"Star sapphire")]
+	[h:addTableEntry(table.gems1000gp,7,7,"Opal")]
+	[h:addTableEntry(table.gems1000gp,8,8,"Yellow sapphire")]
+	}]
+
+[if(json.contains(campaign.tableList,table.gems5000gp)), CODE: { }; {
+	[h:createTable(table.gems5000gp, 0, 0 )]
+	[h:addTableEntry(table.gems5000gp,1,1,"Black sapphire")]
+	[h:addTableEntry(table.gems5000gp,2,2,"Diamond")]
+	[h:addTableEntry(table.gems5000gp,3,3,"Jacinth")]
+	[h:addTableEntry(table.gems5000gp,4,4,"Ruby")]
+	}]
+
+[if(json.contains(campaign.tableList,table.gems5000gp)), CODE: { }; {
+	[h:createTable(table.gems5000gp, 0, 0 )]
+	[h:addTableEntry(table.gems5000gp,1,1,"Black sapphire")]
+	[h:addTableEntry(table.gems5000gp,2,2,"Diamond")]
+	[h:addTableEntry(table.gems5000gp,3,3,"Jacinth")]
+	[h:addTableEntry(table.gems5000gp,4,4,"Ruby")]
+	}]
+
+[if(json.contains(campaign.tableList,table.art25gp)), CODE: { }; {
+	[h:createTable(table.art25gp, 0, 0 )]
+	[h:addTableEntry(table.art25gp,1,1,"Silver ewer")]
+	[h:addTableEntry(table.art25gp,2,2,"Carved bone statuette")]
+	[h:addTableEntry(table.art25gp,3,3,"Small gold bracelet")]
+	[h:addTableEntry(table.art25gp,4,4,"Cloth-of-gold vestments")]
+	[h:addTableEntry(table.art25gp,5,5,"Black velvet mask stitched with silver thread")]
+	[h:addTableEntry(table.art25gp,6,6,"Copper chalice with silver filigree")]
+	[h:addTableEntry(table.art25gp,7,7,"Pair of engraved bone dice")]
+	[h:addTableEntry(table.art25gp,8,8,"Small mirror set in a painted wooden frame")]
+	[h:addTableEntry(table.art25gp,9,9,"Embroidered silk handkerchief")]
+	[h:addTableEntry(table.art25gp,10,10,"Gold locket with a painted portrait inside")]
+}]
+
+[if(json.contains(campaign.tableList,table.art250gp)), CODE: { }; {
+	[h:createTable(table.art250gp, 0, 0 )]
+	[h:addTableEntry(table.art250gp,1,1,"Gold ring set with bloodstones")]
+	[h:addTableEntry(table.art250gp,2,2,"Carved ivory statuette")]
+	[h:addTableEntry(table.art250gp,3,3,"Large gold bracelet")]
+	[h:addTableEntry(table.art250gp,4,4,"Silver necklace with a gemstone pendant")]
+	[h:addTableEntry(table.art250gp,5,5,"Bronze crown")]
+	[h:addTableEntry(table.art250gp,6,6,"Silk robe with gold embroidery")]
+	[h:addTableEntry(table.art250gp,7,7,"Large well-made tapestry")]
+	[h:addTableEntry(table.art250gp,8,8,"Brass mug with jade inlay")]
+	[h:addTableEntry(table.art250gp,9,9,"Box of turquoise animal figurines")]
+	[h:addTableEntry(table.art250gp,10,10,"Gold bird cage with electrum filigree")]
+}]
+
+[if(json.contains(campaign.tableList,table.art750gp)), CODE: { }; {
+	[h:createTable(table.art750gp, 0, 0 )]
+	[h:addTableEntry(table.art750gp,1,1,"Silver chalice set with moonstones")]
+	[h:addTableEntry(table.art750gp,2,2,"Silver-plated steel longsword with jet set in hilt")]
+	[h:addTableEntry(table.art750gp,3,3,"Carved harp of exotic wood with ivory inlay and zircon gems")]
+	[h:addTableEntry(table.art750gp,4,4,"Small gold idol")]
+	[h:addTableEntry(table.art750gp,5,5,"Gold dragon comb set with red garnets as eyes")]
+	[h:addTableEntry(table.art750gp,6,6,"Bottle stopper cork embossed with gold leaf and set with amethysts")]
+	[h:addTableEntry(table.art750gp,7,7,"Ceremonial electrum dagger with a black pearl in the pommel")]
+	[h:addTableEntry(table.art750gp,8,8,"Silver and gold brooch")]
+	[h:addTableEntry(table.art750gp,9,9,"Obsidian statuette with gold fittings and inlay")]
+	[h:addTableEntry(table.art750gp,10,10,"Painted gold war mask")]
+}]
+
+[if(json.contains(campaign.tableList,table.art2500gp)), CODE: { }; {
+	[h:createTable(table.art2500gp, 0, 0 )]
+	[h:addTableEntry(table.art2500gp,1,1,"Fine gold chain set with a fire opal")]
+	[h:addTableEntry(table.art2500gp,2,2,"Old masterpiece painting")]
+	[h:addTableEntry(table.art2500gp,3,3,"Embroidered silk and velvet mantle set with numerous moonstones")]
+	[h:addTableEntry(table.art2500gp,4,4,"Platinum bracelet set with a sapphire")]
+	[h:addTableEntry(table.art2500gp,5,5,"Embroidered glove set with jewel chips")]
+	[h:addTableEntry(table.art2500gp,6,6,"Jeweled anklet")]
+	[h:addTableEntry(table.art2500gp,7,7,"Gold music box")]
+	[h:addTableEntry(table.art2500gp,8,8,"Gold circlet set with four aquamarines")]
+	[h:addTableEntry(table.art2500gp,9,9,"Eye patch with a mock eye set in blue sapphire and moonstone")]
+	[h:addTableEntry(table.art2500gp,10,10,"A necklace string of small pink pearls")]
+}]
+
+
+[if(json.contains(campaign.tableList,table.art7500gp)), CODE: { }; {
+	[h:createTable(table.art7500gp, 0, 0 )]
+	[h:addTableEntry(table.art7500gp,1,1,"Jeweled gold crown")]
+	[h:addTableEntry(table.art7500gp,2,2,"Jeweled platinum ring")]
+	[h:addTableEntry(table.art7500gp,3,3,"Small gold statuette set with rubies")]
+	[h:addTableEntry(table.art7500gp,4,4,"Gold cup set with emeralds")]
+	[h:addTableEntry(table.art7500gp,5,5,"Gold jewelry box with platinum filigree")]
+	[h:addTableEntry(table.art7500gp,6,6,"Painted gold child sarcophagus")]
+	[h:addTableEntry(table.art7500gp,7,7,"Jade game board with solid gold playing pieces")]
+	[h:addTableEntry(table.art7500gp,8,8,"Bejeweled ivory drinking horn with gold filigree")]
+}]
 
 <!-- Launch Window -->
-[h:RollTreasure = input(
-	"cr|1|CR Level"
-	)]
+[h:RollTreasure = input( "cr|1|CR Level")]
 [h:abort(RollTreasure)]
 
 <!-- get coins -->
 [h,if(cr <= 4), CODE:{
-	[h: gemsNartTable = "cr1.art.objects"]
-	[h: gemsNart = evalmacro(table(gemsNartTable,1d100))]
-	[h: varsFromStrProp(gemsNart)]
 	[h: copper = 600d6]
 	[h: silver = 300d6]
 	[h: electrum = 0]
@@ -69,7 +425,6 @@ example for cr17.solo.treasure:
 	[h: platinum = 500d6]
 	}]
 
-
 [h,if(cr >= 17), CODE:{ 
 	[h: copper = 0]
 	[h: silver = 0]
@@ -79,52 +434,60 @@ example for cr17.solo.treasure:
 	}]
 
 [h: coincount = add(copper, silver, electrum, gold, platinum)]
+[h: coinlbs = round(divide(coincount,50),1) ]
 
-
-[h, if(copper>0), CODE:{
+<!-- format coin list --> 
+[h,if(copper>0), CODE:{
 	[h: treasureoutput = add(treasureoutput,copper," cp")]
 	[h: totalcoins = totalcoins + copper]
 	}]
 
-[h, if(silver>0), CODE:{
-	[h, if(totalcoins>0), CODE: {
+[h,if(silver>0), CODE: {
+	[h,if(totalcoins>0), CODE: {
 		[h: treasureoutput = add(treasureoutput,", ")]
-		[h, if(coincount == add(totalcoins,silver) ): treasureoutput = add(treasureoutput," and ")]
+		[h,if(coincount == add(totalcoins,silver) ): treasureoutput = add(treasureoutput," and ")]
 		}]
 	[h: treasureoutput = add(treasureoutput,silver," sp")]
 	[h: totalcoins = totalcoins + silver]
 	}]
 
-[h, if(electrum>0), CODE:{
-	[h, if(totalcoins>0), CODE: {
+[h,if(electrum>0), CODE: {
+	[h,if(totalcoins>0), CODE: {
 		[h: treasureoutput = add(treasureoutput,", ")]
-		[h, if(coincount == add(totalcoins,electrum) ): treasureoutput = add(treasureoutput," and ")]
+		[h,if(coincount == add(totalcoins,electrum) ): treasureoutput = add(treasureoutput," and ")]
 		}]
 	[h: treasureoutput = add(treasureoutput,electrum," ep")]
 	[h: totalcoins = totalcoins + electrum]
 	}]
 
-[h, if(gold>0), CODE:{
-	[h, if(totalcoins>0), CODE: {
+[h,if(gold>0), CODE: {
+	[h,if(totalcoins>0), CODE: {
 		[h: treasureoutput = add(treasureoutput,", ")]
-		[h, if(coincount == totalcoins + gold): treasureoutput = add(treasureoutput," and ")]
+		[h,if(coincount == totalcoins + gold): treasureoutput = add(treasureoutput," and ")]
 		}]
 	[h: treasureoutput = add(treasureoutput,gold," gp")]
 	[h: totalcoins = totalcoins + gold]
 	}]
 
-[h, if(platinum>0), CODE: {
-	[h, if(totalcoins>0), CODE: {
+[h,if(platinum>0), CODE: {
+	[h,if(totalcoins>0), CODE: {
 		[h: treasureoutput = add(treasureoutput,", ")]
-		[h, if(coincount == add(totalcoins,platinum) ): treasureoutput = add(treasureoutput," and ")]
+		[h,if(coincount == add(totalcoins,platinum) ): treasureoutput = add(treasureoutput," and ")]
 		}]
 	[h: treasureoutput = add(treasureoutput,platinum," pp")]
 	[h: totalcoins = totalcoins + platinum]
 	}]
 
-<!-- get gems -->
+<!-- get gems & art -->
+[h,if(cr <= 4): objects = evalmacro(table(treasure.objects.cr0,1d100)) ]
+[h,if(cr >= 5 && cr <= 10): objects = evalmacro(table(treasure.objects.cr5,1d100)) ]
+[h,if(cr >= 11 && cr <= 16): objects = evalmacro(table(treasure.objects.cr11,1d100)) ]
+[h,if(cr >= 17): objects = evalmacro(table(treasure.objects.cr17,1d100)) ]
+[h: varsFromStrProp(objects)]
+
+[h,if(gems>0): thishorde.gems = concat("table.gems",gvalue,"gp")]
 [count(gems,""), CODE:{
-	[h: gem = evalmacro(table("10gp.gems",1d12))]
+	[h: gem = table(eval(thishorde.gems))]
 	[if(json.contains(gemlist,gem)),CODE: {
 		[h: gemlist = json.set(gemlist,gem,add(json.get(gemlist,gem),1))]};{
 		[h: gemlist = json.set(gemlist,gem,1)]
@@ -132,20 +495,28 @@ example for cr17.solo.treasure:
 }]
 
 <!-- get art -->
+[h,if(art>0): thishorde.art = concat("table.art",avalue,"gp")]
+[h,if(art>0): setTablePickOnce(eval(thishorde.art),1)]
 [count(art,""), CODE:{
-	[h: art = evalmacro(table("25gp.art.objects",1d10))]
-	[if(json.contains(artlist,art)),CODE: {
-		[h: artlist = json.set(artlist,art,add(json.get(artlist,art),1))]};{
-		[h: artlist = json.set(artlist,art,1)]
-		}]
+	[h: artobject = table(eval(thishorde.art))]
+	[if(json.contains(artlist,artobject)),CODE: 
+		{ [h: artlist = json.set(artlist,artobject,add(json.get(artlist,artobject),1))]};
+		{ [h: artlist = json.set(artlist,artobject,1)] }]
 }]
+[h,if(art>0): resetTablePicks(eval(thishorde.art))]
 
-<br>
-[r:"GEMS? " + gemlist] <br> 
-[r:"ART? " + artlist] <br>  
+[r: "<br>"]
+[r: "<b><u>COINS</u></b>"]
+[r: strformat("<br>CR%{cr} treasure horde had %{treasureoutput}.<br>(%{coincount} coins, %{coinlbs} lbs.)")]
+[r: "<br><br>"]
 
-[h: coinlbs = round(divide(coincount,50),1) ]
+[r: "<b><u>GEMS</u></b><br>"]
+[foreach (gem, gemlist, "<br>"), CODE: { [r: concat(json.get(gemlist,gem), " ", gem, " (", gvalue, " gp ea.)" )] }]
+[r,if(gems==0): "None"]
+[r: "<br><br>"]
 
-[h:output = strformat("CR%{cr} treasure horde had <br>%{treasureoutput}.<br>(%{coincount} coins, %{coinlbs} lbs.)")] 
+[r: "<b><u>ART</u></b><br>"]
+[foreach (artobject, artlist, "<br>"), CODE: { [r: concat(artobject, " (", avalue, " gp)")] }]
+[r,if(art==0): "None"]
+[r: "<br>"]
 
-[r: output]<br>
